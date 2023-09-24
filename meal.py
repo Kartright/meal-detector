@@ -19,7 +19,7 @@ for i in range(len(x)):
     foodLst.append(x[i].strip('\n'))
 for i in range(len(y)):
     recipesLst.append(y[i].strip('\n'))
-
+    
 def organizeLst(header,section):
     '''
     Takes the header of each food storage location in the food list file and
@@ -36,8 +36,16 @@ def organizeLst(header,section):
     return lst
 
 
-
 def displayFood():
+    food = open("foodList", 'r')
+    x = food.readlines()
+    food.close
+
+    foodLst = []
+
+    for i in range(len(x)):
+        foodLst.append(x[i].strip('\n'))
+
     for i in range(len(foodLst)-1):
         if foodLst[i] == '-':
             items = []
@@ -50,7 +58,55 @@ def displayFood():
             area.pack()
             foodLabel.pack()
 
+    foodInput = Entry()
+    foodInput.pack()
+
+    def addCupboard():
+        with open('foodList', 'r+') as food:
+            contents = food.readlines()
+            if "Cupboards:" in contents[-1]:  # Handle last line to prevent IndexError
+                contents.append(foodInput.get() + "\n")
+            else:
+                for index, line in enumerate(contents):
+                    if "Cupboards:" in line and foodInput.get() not in contents[index + 1]:
+                        contents.insert(index + 1, foodInput.get() + "\n")
+                        break
+            food.seek(0)
+            food.writelines(contents)
+    
+    def addFridge():
+        with open('foodList', 'r+') as food:
+            contents = food.readlines()
+            if "Fridge:" in contents[-1]:  # Handle last line to prevent IndexError
+                contents.append(foodInput.get() + "\n")
+            else:
+                for index, line in enumerate(contents):
+                    if "Fridge:" in line and foodInput.get() not in contents[index + 1]:
+                        contents.insert(index + 1, foodInput.get() + "\n")
+                        break
+            food.seek(0)
+            food.writelines(contents)
+
+    
+    addFoodCup = Button(root, text="Add Food to Cupboard", command=addCupboard)
+    addFoodFridge = Button(root, text="Add Food to Fridge", command=addFridge)
+    addFoodCup.pack()
+    addFoodFridge.pack()
+
+    
+
+
+
 def displayMeals():
+    recipes = open("recipes",'r')
+    y = recipes.readlines()
+    recipes.close
+
+    recipesLst = []
+
+    for i in range(len(y)):
+        recipesLst.append(y[i].strip('\n'))
+
     for i in range(len(recipesLst)-1):
         if recipesLst[i] == '-':
             ingredients = []
@@ -63,13 +119,14 @@ def displayMeals():
                 m = Label(root, text=mtext)
                 m.pack()
                 ingredients.pop()
-                rtext = "Ingredients Requred: ", ingredients
-                r = Label(root, text=rtext)
+                q = Label(root, text="Ingredients Required:")
+                r = Label(root, text=ingredients)
+                q.pack()
                 r.pack()
 
 
 root = Tk()
-root.geometry("600x450")
+
 # Title widget for the program
 title = Label(root, text="Welcome to the Meal Detector!")
 desc = Label(root, text="Start by selecting any of the options below.")
