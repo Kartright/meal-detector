@@ -1,9 +1,10 @@
+-
 Cupboard:
 macaroni
-nacho chips
+nacho-chips
 salt
 pepper
-garlic powder
+garlic-powder
 rice
 corn
 beans
@@ -12,11 +13,11 @@ Fridge:
 butter
 cucumbers
 carrots
-chicken breast
-ground beef
+chicken-breast
+ground-beef
 cheese
---
+-
 Liquids:
 milk
-chicken broth
----
+chicken-broth
+-
