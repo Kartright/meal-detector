@@ -112,7 +112,14 @@ def displayFood():
 
 
 def displayRecipes():
-    
+    '''
+    Runs when display recipes button is pressed.
+
+    displays the name of the recipe and the ingredients required to cook it.
+
+    diplays entry box where a new recipe title, and ingredients can be added
+    to the recipes list.
+    '''
     recipes = open("recipes",'r')
     y = recipes.readlines()
     recipes.close
