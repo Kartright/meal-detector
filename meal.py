@@ -1,25 +1,25 @@
 from tkinter import *
+import sys
 
-# Readlines for list of food
-food = open("foodList", 'r')
-x = food.readlines()
-food.close
+def openFile(fileName):
+    try:
+        f = open(fileName, 'r')
+        return f
+    except FileNotFoundError:
+        print("File Not Found")
+    except OSError:
+        print("OS Error")
+        return sys.stdin
 
-# Readlines for Recipe list
-recipes = open("recipes",'r')
-y = recipes.readlines()
-recipes.close
 
-# Empty lists for appending food a recipes to
-foodLst = []
-recipesLst = []
+def readFile(f):
+    file = f.readlines()
+    fileLst = []
+    for i in range(len(file)):
+        fileLst.append(file[i].strip('\n'))
+    return fileLst
 
-# Strips the newline from each list element
-for i in range(len(x)):
-    foodLst.append(x[i].strip('\n'))
-for i in range(len(y)):
-    recipesLst.append(y[i].strip('\n'))
-    
+
 def organizeLst(header,section):
     '''
     Takes the header of each food storage location in the food list file and
@@ -36,7 +36,6 @@ def organizeLst(header,section):
     return lst
 
 
-
 def displayFood():
     '''
     Runs when the display food button is pressed.
@@ -46,14 +45,8 @@ def displayFood():
     Two buttons are also displayed, one to put the food entred into the 
     box into the cupboard section adn one for the fridge section.
     '''
-    food = open("foodList", 'r')
-    x = food.readlines()
-    food.close
-
-    foodLst = []
-
-    for i in range(len(x)):
-        foodLst.append(x[i].strip('\n'))
+    food = openFile("foodList")
+    foodLst = readFile(food)
 
     for i in range(len(foodLst)-1):
         if foodLst[i] == '-':
@@ -87,6 +80,7 @@ def displayFood():
             food.seek(0)
             food.writelines(contents)
         foodInput.delete(0,END)
+
     def addFridge():
         '''
         Writes the new food inserted into the entry box into the first line
@@ -120,14 +114,8 @@ def displayRecipes():
     diplays entry box where a new recipe title, and ingredients can be added
     to the recipes list.
     '''
-    recipes = open("recipes",'r')
-    y = recipes.readlines()
-    recipes.close
-
-    recipesLst = []
-
-    for i in range(len(y)):
-        recipesLst.append(y[i].strip('\n'))
+    recipes = openFile("recipes")
+    recipesLst = readFile(recipes)
     
     for i in range(len(recipesLst)-1):
         if recipesLst[i] == '-':
@@ -149,11 +137,13 @@ def displayRecipes():
             rp.write('\n')
             rp.write(newRecipe.get()+':')
         newRecipe.delete(0,END)
+
     def addIngredient():
         with open('recipes','a') as rp:
             rp.write('\n')
             rp.write(newRecipe.get())
         newRecipe.delete(0,END)
+
     def addFinalIngredient():
         with open('recipes','a') as rp:
             rp.write('\n')
@@ -169,7 +159,6 @@ def displayRecipes():
     addFinalIngredientBut.pack()
 
 
-
 def displayMeals():
     '''
     Runs when the display meals button is pressed.
@@ -178,14 +167,11 @@ def displayMeals():
     the foodList file. If a they match, it prints a label saying which meal
     can be made, and the two other lables showing which ingredients are requred for the meal.
     '''
-    recipes = open("recipes",'r')
-    y = recipes.readlines()
-    recipes.close
+    recipes = openFile("recipes")
+    recipesLst = readFile(recipes)
 
-    recipesLst = []
-
-    for i in range(len(y)):
-        recipesLst.append(y[i].strip('\n'))
+    food = openFile('foodList')
+    foodLst = readFile(food)
 
     for i in range(len(recipesLst)-1):
         if recipesLst[i] == '-':
