@@ -45,6 +45,8 @@ def displayFood():
     Two buttons are also displayed, one to put the food entred into the 
     box into the cupboard section adn one for the fridge section.
     '''
+    reset()
+
     food = openFile("foodList")
     foodLst = readFile(food)
 
@@ -55,12 +57,12 @@ def displayFood():
             while foodLst[x+1] != '-':
                 items.append(str(foodLst[x+1]) + ',')
                 x += 1
-            area = Label(root, text=foodLst[i+1])
-            foodLabel = Label(root, text=items)
+            area = Label(frame, text=foodLst[i+1], font=('arial',15,'bold'))
+            foodLabel = Label(frame, text=items)
             area.pack()
             foodLabel.pack()
 
-    foodInput = Entry()
+    foodInput = Entry(frame)
     foodInput.pack()
 
     def addCupboard():
@@ -99,8 +101,8 @@ def displayFood():
             food.writelines(contents)
         foodInput.delete(0,END)
     
-    addFoodCup = Button(root, text="Add Food to Cupboard", command=addCupboard)
-    addFoodFridge = Button(root, text="Add Food to Fridge", command=addFridge)
+    addFoodCup = Button(frame, text="Add Food to Cupboard", command=addCupboard)
+    addFoodFridge = Button(frame, text="Add Food to Fridge", command=addFridge)
     addFoodCup.pack()
     addFoodFridge.pack()
 
@@ -114,6 +116,8 @@ def displayRecipes():
     diplays entry box where a new recipe title, and ingredients can be added
     to the recipes list.
     '''
+    reset()
+
     recipes = openFile("recipes")
     recipesLst = readFile(recipes)
     
@@ -124,12 +128,12 @@ def displayRecipes():
             while recipesLst[x+1] != '-':
                 items.append(str(recipesLst[x+1]) + ',')
                 x += 1
-            area = Label(root, text=recipesLst[i+1])
-            recipesLabel = Label(root, text=items)
+            area = Label(frame, text=recipesLst[i+1], font=('arial',15,'bold'))
+            recipesLabel = Label(frame, text=items)
             area.pack()
             recipesLabel.pack()
     
-    newRecipe = Entry()
+    newRecipe = Entry(frame)
     newRecipe.pack()
 
     def addRecipe():
@@ -151,12 +155,13 @@ def displayRecipes():
             rp.write('\n-')
         newRecipe.delete(0,END)
 
-    addRecipeBut = Button(root, text='Add New Recipe', command=addRecipe)
-    addIngredientBut = Button(root, text="Add Ingredient", command=addIngredient)
-    addFinalIngredientBut = Button(root, text='Add FINAL Ingredient', command=addFinalIngredient)
+    addRecipeBut = Button(frame, text='Add New Recipe', command=addRecipe)
+    addIngredientBut = Button(frame, text="Add Ingredient", command=addIngredient)
+    addFinalIngredientBut = Button(frame, text='Add FINAL Ingredient', command=addFinalIngredient)
     addRecipeBut.pack()
     addIngredientBut.pack()
     addFinalIngredientBut.pack()
+
 
 
 def displayMeals():
@@ -167,6 +172,8 @@ def displayMeals():
     the foodList file. If a they match, it prints a label saying which meal
     can be made, and the two other lables showing which ingredients are requred for the meal.
     '''
+    reset()
+
     recipes = openFile("recipes")
     recipesLst = readFile(recipes)
 
@@ -182,31 +189,44 @@ def displayMeals():
                 x += 1
             if all(elem in foodLst for elem in ingredients):
                 mtext = "You have the ingredients to cook " + recipesLst[i+1].strip(":") + "!"
-                m = Label(root, text=mtext)
+                m = Label(frame, text=mtext, font=('arial',15,'bold'))
                 m.pack()
                 ingredients.pop()
-                q = Label(root, text="Ingredients Required:")
-                r = Label(root, text=ingredients)
+                q = Label(frame, text="Ingredients Required:")
+                r = Label(frame, text=ingredients)
                 q.pack()
                 r.pack()
 
+def reset():
+    global frame
+
+    frame.destroy()
+    frame = createFrame(root)
+    frame.pack()
+
+def createFrame(root):
+    frame = Frame(root)
+    # Title widget for the program
+    title = Label(frame, text="Welcome to the Meal Detector!")
+    desc = Label(frame, text="Start by selecting any of the options below.")
+    # Buttons
+    foodBut = Button(frame, text="Display Food", command=displayFood)
+    recipeBut = Button(frame, text="Display Recipes", command=displayRecipes)
+    mealBut = Button(frame, text="Display Meals!", command=displayMeals)
+
+    # Layout commands
+    title.pack()
+    desc.pack()
+    foodBut.pack()
+    recipeBut.pack()
+    mealBut.pack()
+
+    return frame
 
 root = Tk()
 
-# Title widget for the program
-title = Label(root, text="Welcome to the Meal Detector!")
-desc = Label(root, text="Start by selecting any of the options below.")
-# Buttons
-foodBut = Button(root, text="Display Food", command=displayFood)
-recipeBut = Button(root, text="Display Recipes", command=displayRecipes)
-mealBut = Button(root, text="Display Meals!", command=displayMeals)
-
-# Layout commands
-title.pack()
-desc.pack()
-foodBut.pack()
-recipeBut.pack()
-mealBut.pack()
+frame = createFrame(root)
+frame.pack()
 
 root.mainloop()
 
